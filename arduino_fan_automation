@@ -99,7 +99,7 @@
   - action: timer.start
     metadata: {}
     data:
-      duration: 00:30:00
+      duration: 00:01:00
     target:
       entity_id: timer.fan_timer
   mode: single
@@ -243,7 +243,7 @@
       topic: ArduinoR4
       payload: FanTimerEnd
   mode: single
-- id: '1750656286290'
+- id: '1750815435464'
   alias: 선풍기 PIR센서 감지
   description: ''
   triggers:
@@ -259,6 +259,9 @@
     - condition: state
       entity_id: input_select.fan_century
       state: 'OFF'
+  - condition: state
+    entity_id: input_boolean.fan_timer_pir
+    state: 'on'
   actions:
   - action: timer.start
     metadata: {}
@@ -275,4 +278,3 @@
       topic: ArduinoR4
       payload: 10m
   mode: single
-
