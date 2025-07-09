@@ -1,0 +1,9 @@
+# homeassistant configuration.yaml 내용
+# arduino_humidifier 사용 시 추가 내용
+
+mqtt:
+    - text:
+        name: "humidifier"
+        mode: "text"
+        command_topic: "Arduinohumidifier"
+        state_topic: "Arduinohumidifier"
