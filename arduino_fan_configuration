@@ -1,9 +1,0 @@
-# homeassistant configuration.yaml 내용
-# arduino_fan 사용 시 추가 내용
-
-mqtt:
-    - text:
-        name: "Fan"
-        mode: "text"
-        command_topic: "ArduinoFan"
-        state_topic: "ArduinoFan"
