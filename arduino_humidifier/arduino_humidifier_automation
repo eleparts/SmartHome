@@ -1,53 +1,3 @@
-- id: '1752026556919'
-  alias: 가습기 모듈 수 선택
-  description: ''
-  triggers:
-  - trigger: state
-    entity_id:
-    - input_select.humi_humidifier_count
-  conditions: []
-  actions:
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_select.humi_humidifier_count
-        state: ''
-      sequence:
-      - action: mqtt.publish
-        metadata: {}
-        data:
-          evaluate_payload: false
-          qos: 0
-          retain: false
-          topic: ArduinoR4
-          payload: EN1
-    - conditions:
-      - condition: state
-        entity_id: input_select.humi_humidifier_count
-        state: ''
-      sequence:
-      - action: mqtt.publish
-        metadata: {}
-        data:
-          evaluate_payload: false
-          qos: 0
-          retain: false
-          topic: ArduinoR4
-          payload: EN2
-    - conditions:
-      - condition: state
-        entity_id: input_select.humi_humidifier_count
-        state: ''
-      sequence:
-      - action: mqtt.publish
-        metadata: {}
-        data:
-          evaluate_payload: false
-          qos: 0
-          retain: false
-          topic: ArduinoR4
-          payload: EN3
-  mode: single
 - id: '1752026865255'
   alias: 가습기 타이머 시작 및 시간 지정
   description: ''
@@ -62,8 +12,8 @@
   - action: timer.start
     metadata: {}
     data:
-      duration: '{{states(''input_number.humi_timer_hour'') | int * 3600 + states(''input_number.humi_timer_minute''
-        | int * 60)}}'
+      duration: '{{states(''input_number.humi_timer_hour'') | int * 3600 + states(''input_number.humi_timer_minute'')
+        | int * 60}}'
     target:
       entity_id: timer.humi_timer
   - action: mqtt.publish
@@ -165,7 +115,57 @@
           topic: ArduinoR4
           payload: TIMER_humi
   mode: single
-- id: '1752040868118'
+- id: '1752108601004'
+  alias: 가습기 모듈 수 선택
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - input_select.humi_humidifier_count
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_select.humi_humidifier_count
+        state: 1번 가습기
+      sequence:
+      - action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: ArduinoR4
+          payload: EN1
+    - conditions:
+      - condition: state
+        entity_id: input_select.humi_humidifier_count
+        state: 2번 가습기
+      sequence:
+      - action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: ArduinoR4
+          payload: EN2
+    - conditions:
+      - condition: state
+        entity_id: input_select.humi_humidifier_count
+        state: 모두
+      sequence:
+      - action: mqtt.publish
+        metadata: {}
+        data:
+          evaluate_payload: false
+          qos: 0
+          retain: false
+          topic: ArduinoR4
+          payload: EN3
+  mode: single
+- id: '1752112128251'
   alias: 가습기 제어 습도값 설정
   description: ''
   triggers:
@@ -173,7 +173,10 @@
     entity_id:
     - input_number.humi_sensor_min
     - input_number.humi_sensor_max
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: input_boolean.humi_timer_humi
+    state: 'on'
   actions:
   - action: mqtt.publish
     metadata: {}
@@ -182,6 +185,29 @@
       qos: 0
       retain: false
       topic: ArduinoR4
-      payload: '{{states(''input_number.coeso_seubdogabs_seoljeong'') | round(0) *
-        1000 + states(''input_number.coego_seubdogabs_seoljeong'') | round(0) }}humidifier'
+      payload: '{{states(''input_number.humi_sensor_min'') | round(0) * 1000 + states(''input_number.humi_sensor_max'')
+        | round(0)}}humidifier'
+  mode: single
+- id: '1752122519057'
+  alias: 가습기 타이머 습도센서 충돌 막기
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - automation.gaseubgi_taimeo_sijag_mic_sigan_jijeong
+  conditions:
+  - condition: state
+    entity_id: input_boolean.humi_timer_humi
+    state: 'on'
+  actions:
+  - action: timer.cancel
+    metadata: {}
+    data: {}
+    target:
+      entity_id: timer.humi_timer
+  - action: input_boolean.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: input_boolean.humi_start_stop
   mode: single
