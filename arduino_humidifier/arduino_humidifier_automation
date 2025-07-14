@@ -188,7 +188,7 @@
       payload: '{{states(''input_number.humi_sensor_min'') | round(0) * 1000 + states(''input_number.humi_sensor_max'')
         | round(0)}}humidifier'
   mode: single
-- id: '1752122519057'
+- id: '1752123581424'
   alias: 가습기 타이머 습도센서 충돌 막기
   description: ''
   triggers:
