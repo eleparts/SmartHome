@@ -99,7 +99,7 @@
   - action: timer.start
     metadata: {}
     data:
-      duration: 00:01:00
+      duration: 00:30:00
     target:
       entity_id: timer.fan_timer
   mode: single
